@@ -1,0 +1,63 @@
+#!/bin/bash
+
+append_xhost(){
+    if ! grep -Fxq "$1" "$2"; then
+        echo "$1" | sudo tee -a "$2"
+    else
+        echo "XHOST already exists in the $2."
+    fi
+}
+
+sudo useradd -m -s /usr/sbin/nologin fido
+
+# ALLOW fido USER TO ACCESS DISPLAY
+LINE="/usr/bin/xhost +SI:localuser:fido > /dev/null 2>&1"
+FILE="/etc/profile" # write it to etc/profile, this is then executed upon login, there is probably a better way to allow fido to spawn gui elements
+
+append_xhost "$LINE" "$FILE"
+if [[ $SHELL == *"zsh"* ]]; then
+    FILE="$HOME/.zshrc"
+elif [[ $SHELL == *"bash"* ]]; then
+    FILE="$HOME/.bashrc"
+fi
+append_xhost "$LINE" "$FILE"
+
+# COPY THE UDEV RULE THAT LIMITS ACCESS TO FIDO TOKENS TO ONE USER
+sudo mkdir -p /etc/udev/rules.d
+sudo cp ./library/91-claim-fido.rules /etc/udev/rules.d
+
+# COPY THE CONFIG FOR THE DBUS SERVER
+sudo mkdir -p /etc/dbus-1/system.d
+sudo cp ./library/org.mp.fido.conf /etc/dbus-1/system.d
+
+sudo cp ./library/dbus-org.mp.fido.sh /usr/bin
+sudo chmod +x /usr/bin/dbus-org.mp.fido.sh
+
+# COPY THE SYSTEMD SERVICE FILE 
+sudo mkdir -p /etc/systemd/system
+sudo cp ./library/dbus-org.mp.fido.service /etc/systemd/system
+DISPLAY_VALUE=$(ps e | grep -o 'DISPLAY=[^ ]*' | head -n 1 | cut -d= -f2)
+sudo sed -i "s/DISPLAY/DISPLAY=$DISPLAY/g" /etc/systemd/system/dbus-org.mp.fido.service
+
+cd ./code
+chmod +x setup
+./setup
+
+# COPY THE EXECUTABLES TO /USR/BIN
+sudo mkdir -p /usr/bin
+sudo cp ./server/dbus-org.mp.fido.server /usr/bin
+sudo chmod +x /usr/bin/dbus-org.mp.fido.server
+
+# COPY THE LIBRARIES TO /USR/LIB
+sudo mkdir -p  /usr/lib
+sudo cp ./libwebauthn-bridge/target/release/liblibwebauthn_bridge.so /usr/lib
+
+# RELOAD UDEV RULES
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+
+sudo systemctl daemon-reload
+sudo systemctl enable dbus-org.mp.fido
+sudo systemctl restart dbus-org.mp.fido
+
+echo "To fully apply changes please log out"

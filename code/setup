@@ -1,0 +1,44 @@
+#! /bin/bash
+
+LIBWEBAUTHN_BRIDGE="libwebauthn-bridge"
+LIBWEBAUTHN_BRIDGE_PATH="$(pwd)/libwebauthn-bridge/target/debug"
+XDG_CREDENTIALS_PORTAL="xdg-credentials-portal"
+
+RED='\033[31m'
+NORMAL='\033[0m'
+
+
+clean(){
+    if [ -d "$XDG_CREDENTIALS_PORTAL" ]; then
+        sudo rm -r "$XDG_CREDENTIALS_PORTAL"
+    fi
+
+    if [ -d "webauthn-test-server" ]; then
+        sudo rm -r "webauthn-test-server"
+    fi
+    make clean > /dev/null 2>&1
+}
+
+
+setup(){
+    if ! [ -d "$XDG_CREDENTIALS_PORTAL" ]; then
+        echo "CLONING XDG-CREDENTIALS-PORTAL..."
+        git clone https://github.com/aurarius1/xdg-credentials-portal.git --recurse-submodules > /dev/null 2>&1
+    fi
+    #if ! [ -d "webauthn-test-server" ]; then
+    #    echo "CLONING WEBAUTHN-TEST-SERVER..."
+    #    git clone https://extgit.iaik.tugraz.at/jheher/webauthn-test-server.git > /dev/null 2>&1
+    #fi
+    #xdg-credentials-portal should build just fine
+    (cd $XDG_CREDENTIALS_PORTAL && cargo build > /dev/null 2>&1)
+    (cd $LIBWEBAUTHN_BRIDGE && cargo build --release)
+    make clean > /dev/null 2>&1
+    make all
+}
+
+
+if [ "$1" == "clean" ]; then
+    clean
+else
+    setup
+fi

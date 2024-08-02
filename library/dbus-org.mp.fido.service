@@ -1,0 +1,19 @@
+[Unit]
+Description=FIDO DBus Server
+After=graphical.target
+Wants=graphical.target
+
+[Service]
+Type=simple
+User=fido
+
+# DISPLAY IS REPLACED BY THE INSTALL SCRIPT
+Environment=DISPLAY
+ExecStart=/bin/bash /usr/bin/dbus-org.mp.fido.sh
+Restart=on-failure
+
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=graphical.target

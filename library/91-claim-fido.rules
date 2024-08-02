@@ -1,0 +1,1 @@
+KERNEL=="hidraw*", SUBSYSTEM=="hidraw", TAG:="fido",  ATTRS{idVendor}=="1050", OWNER:="fido" GROUP:="fido", MODE:="0660", RUN:=""

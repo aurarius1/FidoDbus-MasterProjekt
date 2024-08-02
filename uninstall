@@ -1,0 +1,22 @@
+#!/bin/bash
+
+sudo systemctl stop dbus-org.mp.fido
+sudo systemctl disable dbus-org.mp.fido
+sudo killall -u fido
+sudo userdel fido
+
+sudo rm /usr/lib/liblibwebauthn_bridge.so
+sudo rm /usr/bin/dbus-org.mp.fido.server
+sudo rm /etc/systemd/system/dbus-org.mp.fido.service
+sudo rm /usr/bin/dbus-org.mp.fido.sh
+sudo rm /etc/dbus-1/system.d/org.mp.fido.conf
+sudo rm /etc/udev/rules.d/91-claim-fido.rules
+
+sudo sed -i '/\/usr\/bin\/xhost +SI:localuser:fido/d' /etc/profile
+
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+
+sudo systemctl daemon-reload
+
+echo "To fully apply changes please log out"

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<node name="/org/mp/fido">
+    <interface name="org.mp.fido1">
+        <method name="MakeCredential">
+            <arg name="origin" type="s" direction="in" />
+            <arg name="challenge" type="ay" direction="in" />
+            <arg name="clientData" type="s" direction="in" />
+            <arg name="clientDataHash" type="ay" direction="in" />
+            <arg name="relyingParty" type="(ss)" direction="in" />
+            <arg name="userEntity" type="(ayss)" direction="in" />
+            <!--coseAlgs in firefox -->
+            <arg name="credentialParamters" type="(asai)" direction="in" />
+            <arg name="credentialDescriptor" type="a(yay)" direction="in" />
+            <arg name="extensions" type="(bbb)" direction="in" />
+            <arg name="residentKey" type="s" direction="in" />
+            <arg name="userVerification" type="s" direction="in" />
+            <arg name="authenticatorAttachment" type="s" direction="in" />
+            <arg name="timeoutMS" type="u" direction = "in" />
+            <arg name="attestationConveyancePreference" type="s" direction="in" />
+            <arg name="attestation" type="(ayay)" direction="out" />
+        </method>
+        <method name="GetAssertion">
+            <arg name="origin" type="s" direction="in" />
+            <arg name="challenge" type="ay" direction="in" />
+            <arg name="clientData" type="s" direction="in" />
+            <arg name="clientDataHash" type="ay" direction="in" />
+            <arg name="rpId" type="s" direction="in" />
+            <arg name="credentialDescriptor" type="a(yay)" direction="in" />
+            <arg name="hmacCreateSecret" type="b" direction="in" />
+            <arg name="appId" type="s" direction="in" />
+            <arg name="userVerification" type="s" direction="in" />
+            <arg name="timeoutMS" type="u" direction = "in" />
+            <arg name="conditionallyMediated" type="b" direction="in" />
+
+            <arg name="assertion" type="(ayayayay)" direction="out" />
+        </method>
+    </interface>
+</node>
