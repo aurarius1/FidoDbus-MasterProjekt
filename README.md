@@ -40,7 +40,7 @@ python3 client.py --make-credential
 
 after that omitting the make-credential flag is fine (as the credential already exists).
 
-If you want to test it using Firefox you need to follow the setup instruction [here](https://github.com/aurarius1/FidoFirefox-MasterProjekt?tab=readme-ov-file#fidomp_firefox). As said in the intro (and in the readme of the linked repo containing the Firefox guides) there is an additional check or something that prevents webauthn.io from prompting user interaction for a token interaction, my version sadly does not have this check, so you can ignore the first token interaction request (or do it, it shouldn't really matter).
+If you want to test it using Firefox you need to follow the setup instruction [here](https://github.com/aurarius1/FidoFirefox-MasterProjekt?tab=readme-ov-file#fidomp_firefox). There is an additional check or something that prevents webauthn.io from prompting user interaction for a token interaction, my version does not have this check, so you can ignore the first token interaction request (or do it, it shouldn't really matter).
 
 # C++ client 
 There is also a simple client library for C++ (that is used for Firefox as well), located [here](code/client/). For reasons of compatability with Firefox it does not use sdbus-cpp (as it requires exceptions to be enabled and Firefox, by default, has exceptions disabled). Though, if you are interested in a client using sdbus-cpp you could use the generated client proxy (client/fido-client-glue.h) as a starting point.
@@ -52,7 +52,7 @@ If you want to extend this, or base your work on this by running the install scr
 sudo -u fido path/to/executable
 ```
 
-The install and setup script should have cloned all the other dependencies into a path inside this repository. If you make changed to the libwebauthn-bridge, you need to copy that to the /usr/lib path (see installation script for full path) or adapt the Makefile to link your new version to the server executable.
+The install and setup script should have cloned all the other dependencies into a path inside this repository. If you make changes to the libwebauthn-bridge, you need to copy that to the /usr/lib path (see installation script for full path) or adapt the Makefile to link your new version to the server executable.
 
 # Uninstall
 The uninstall script basically removes all the installed files, stops the systemd service and removes the fido user, restoring your system to a point before running the install script. After that you can delete all the dependencies manually installed and remove this repository.
