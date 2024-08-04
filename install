@@ -10,7 +10,7 @@ append_xhost(){
     fi
 }
 
-sudo useradd -m -s /usr/sbin/nologin fido
+sudo useradd -s /usr/sbin/nologin fido
 
 # ALLOW fido USER TO ACCESS DISPLAY
 LINE="/usr/bin/xhost +SI:localuser:fido > /dev/null 2>&1"
