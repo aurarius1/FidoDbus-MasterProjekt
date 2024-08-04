@@ -1,5 +1,5 @@
 CXX := g++
-LIB_DIR = libwebauthn-bridge/target/debug
+LIB_DIR = /usr/lib
 
 CXXFLAGS := -std=c++17 -Wall -Wextra -I$(LIB_DIR)  # Include directory for library headers
 LDFLAGS := -L$(LIB_DIR) -llibwebauthn_bridge  # Library linking flags

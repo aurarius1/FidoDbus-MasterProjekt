@@ -1,4 +1,6 @@
 #!/bin/bash
+XDG_CREDENTIALS_PORTAL="xdg-credentials-portal"
+LIBWEBAUTHN_BRIDGE="libwebauthn-bridge"
 
 append_xhost(){
     if ! grep -Fxq "$1" "$2"; then
@@ -40,17 +42,31 @@ DISPLAY_VALUE=$(ps e | grep -o 'DISPLAY=[^ ]*' | head -n 1 | cut -d= -f2)
 sudo sed -i "s/DISPLAY/DISPLAY=$DISPLAY/g" /etc/systemd/system/dbus-org.mp.fido.service
 
 cd ./code
-chmod +x setup
-./setup
+if ! [ -d "$XDG_CREDENTIALS_PORTAL" ]; then
+    echo "CLONING XDG-CREDENTIALS-PORTAL..."
+    git clone https://github.com/aurarius1/xdg-credentials-portal.git --recurse-submodules > /dev/null 2>&1
+fi
+#if ! [ -d "webauthn-test-server" ]; then
+#    echo "CLONING WEBAUTHN-TEST-SERVER..."
+#    git clone https://extgit.iaik.tugraz.at/jheher/webauthn-test-server.git > /dev/null 2>&1
+#fi
+#xdg-credentials-portal should build just fine
+(cd $XDG_CREDENTIALS_PORTAL && cargo build > /dev/null 2>&1)
+(cd $LIBWEBAUTHN_BRIDGE && cargo build --release)
+
+# COPY THE LIBRARIES TO /USR/LIB
+sudo mkdir -p  /usr/lib
+sudo cp ./libwebauthn-bridge/target/release/liblibwebauthn_bridge.so /usr/lib
+
+sudo ldfconfig
+
+make clean > /dev/null 2>&1
+make all
 
 # COPY THE EXECUTABLES TO /USR/BIN
 sudo mkdir -p /usr/bin
 sudo cp ./server/dbus-org.mp.fido.server /usr/bin
 sudo chmod +x /usr/bin/dbus-org.mp.fido.server
-
-# COPY THE LIBRARIES TO /USR/LIB
-sudo mkdir -p  /usr/lib
-sudo cp ./libwebauthn-bridge/target/release/liblibwebauthn_bridge.so /usr/lib
 
 # RELOAD UDEV RULES
 sudo udevadm control --reload-rules

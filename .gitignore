@@ -1,2 +1,12 @@
 
 code/client/__pycache__/
+
+code/client/fido-client-glue.h
+
+code/libwebauthn-bridge/target/
+
+code/server/dbus-org.mp.fido.server
+
+code/server/fido-server-glue.h
+
+code/xdg-credentials-portal/

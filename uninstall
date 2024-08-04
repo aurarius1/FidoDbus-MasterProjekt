@@ -13,6 +13,7 @@ sudo rm /etc/dbus-1/system.d/org.mp.fido.conf
 sudo rm /etc/udev/rules.d/91-claim-fido.rules
 
 sudo sed -i '/\/usr\/bin\/xhost +SI:localuser:fido/d' /etc/profile
+sudo sed -i '/\/usr\/bin\/xhost +SI:localuser:fido/d' ~/.bashrc
 
 sudo udevadm control --reload-rules
 sudo udevadm trigger
