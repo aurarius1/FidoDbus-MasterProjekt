@@ -10,3 +10,5 @@ code/server/dbus-org.mp.fido.server
 code/server/fido-server-glue.h
 
 code/xdg-credentials-portal/
+
+code/pyclient/__pycache__/Fido1Proxy.cpython-310.pyc
