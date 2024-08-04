@@ -11,7 +11,7 @@ To test with the included python client you need to clone the  [webauthn-test-se
 - Cargo & Rust - v1.76.0
 - kdialog v21.12.3
 
-The remaining dependencies to build (like the xdg-credentials-portal/libwebauthn from this project) will be cloned by the install / setup script contained in the repository. The install script will first call the build script, building the server executable (and therefore cloning the xdg-credentials-portal and all the other automatable dependencies) and then create all the needed files.
+The remaining dependencies to build (like the xdg-credentials-portal/libwebauthn from this project) will be cloned by the install script contained in the repository. The install script will first call the build script, building the server executable (and therefore cloning the xdg-credentials-portal and all the other automatable dependencies) and then create all the needed files.
 
 If you are not interested in what exactly is implemented and how it was done, skip to [usage](#usage).
 
@@ -52,7 +52,7 @@ If you want to extend this, or base your work on this by running the install scr
 sudo -u fido path/to/executable
 ```
 
-The install and setup script should have cloned all the other dependencies into a path inside this repository. If you make changes to the libwebauthn-bridge, you need to copy that to the /usr/lib path (see installation script for full path) or adapt the Makefile to link your new version to the server executable.
+The install script should have cloned all the other dependencies into a path inside this repository. If you make changes to the libwebauthn-bridge, you need to copy that to the /usr/lib path (see installation script for full path) or adapt the Makefile to link your new version to the server executable.
 
 # Uninstall
 The uninstall script basically removes all the installed files, stops the systemd service and removes the fido user, restoring your system to a point before running the install script. After that you can delete all the dependencies manually installed and remove this repository.
